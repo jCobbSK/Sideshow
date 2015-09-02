@@ -2514,6 +2514,7 @@
       if (!flags.running) {
         var onlyNew = "onlyNew" in config && !! config.onlyNew;
         var listAll = "listAll" in config && !! config.listAll;
+        var forceCompletion = "forceCompletion" in config && !! config.forceCompletion;
         var wizardName = config.wizardName;
 
         if (listAll) SS.showWizardsList(wizards.filter(function (w) {
@@ -2530,10 +2531,12 @@
         }
         else SS.showWizardsList(onlyNew);
 
-        this.CloseButton.singleInstance.render();
-        this.CloseButton.singleInstance.fadeIn();
-
-        registerInnerHotkeys();
+        if (!forceCompletion) {
+          //if sideshow is started with forceCompletion, it can be closed only programmatically -> unregister ESC,F1 and Close button
+          this.CloseButton.singleInstance.render();
+          this.CloseButton.singleInstance.fadeIn();
+          registerInnerHotkeys();
+        }
         flags.running = true;
 
         Polling.enqueue("check_composite_mask_screen_changes", function () {
