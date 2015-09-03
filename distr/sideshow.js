@@ -891,6 +891,10 @@
         if (completed) {
           if (this.currentStep.autoContinue === false) StepDescription.singleInstance.nextButton.enable();
           else currentWizard.next();
+        } else {
+          if (this.currentStep.autoContinue === false) {
+            StepDescription.singleInstance.nextButton.disable();
+          }
         }
       }
     });
