@@ -240,8 +240,21 @@
         "en": "Finish Wizard",
         "pt-br": "Concluir Tutorial",
         "es": "Concluir Tutorial"
+      },
+
+      /**
+       * Add/override words in dictionary. The correct keywords are required.
+       * @method override
+       * @param overrides
+       */
+      override: function (overrides) {
+        for (var keyWord in overrides) {
+          for (var langKey in overrides[keyWord])
+          this[keyWord][langKey] = overrides[keyWord][langKey];
+        }
       }
     };
+
 
     /**
      Sideshow Settings
@@ -2255,9 +2268,10 @@
      Initializes Sideshow
      
      @method init
+     @param {Object} langOverrides
      @static
      **/
-    SS.init = function () {
+    SS.init = function (langOverrides) {
       $window = $(global);
       $document = $(global.document);
       $body = $("body", global.document);
@@ -2266,6 +2280,7 @@
       Mask.CompositeMask.singleInstance.init();
       flags.lockMaskUpdate = true;
       Mask.CompositeMask.singleInstance.render();
+      strings.override(langOverrides);
     };
 
     /**

@@ -2,9 +2,10 @@
     Initializes Sideshow
 
     @method init
+    @param {Object} langOverrides
     @static
     **/
-    SS.init = function() {
+    SS.init = function(langOverrides) {
         $window = $(global);
         $document = $(global.document);
         $body = $("body", global.document);
@@ -13,6 +14,7 @@
         Mask.CompositeMask.singleInstance.init();
         flags.lockMaskUpdate = true;
         Mask.CompositeMask.singleInstance.render();
+        strings.override(langOverrides);
     };
 
     /**
