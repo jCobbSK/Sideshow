@@ -400,3 +400,8 @@
                 throw new SSException("203", "This wizard is not eligible neither has a preparation function.");
         } else this.play();
     });
+
+    Wizard.method("closedBySS", function(){
+      var listeners = this.listeners;
+      if (listeners && listeners.closeSS) listeners.closeSS();
+    })

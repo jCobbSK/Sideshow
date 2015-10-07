@@ -37,6 +37,7 @@
     **/
     SS.close = function() {
         if (!currentWizard) WizardMenu.hide();
+        else currentWizard.closedBySS();
 
         DetailsPanel.singleInstance.fadeOut();
 
@@ -51,12 +52,6 @@
             Mask.SubjectMask.singleInstance.fadeOut();
 
         }, longAnimationDuration);
-
-        wizards.forEach(function(w){
-          if (w.listeners && w.listeners.closeSS) {
-            w.listeners.closeSS();
-          }
-        });
 
         removeDOMGarbage();
         Polling.clear();
