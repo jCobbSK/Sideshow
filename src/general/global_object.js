@@ -50,6 +50,12 @@
 
         }, longAnimationDuration);
 
+        wizards.forEach(function(w){
+          if (w.listeners && w.listeners.closeSS) {
+            w.listeners.closeSS();
+          }
+        });
+
         removeDOMGarbage();
         Polling.clear();
         SS.ControlVariables.clear();
