@@ -38,5 +38,17 @@
             "en": "Finish Wizard",
             "pt-br": "Concluir Tutorial",
             "es": "Concluir Tutorial"
+        },
+
+      /**
+       * Add/override words in dictionary. The correct keywords are required.
+       * @method override
+       * @param overrides
+       */
+        override: function(overrides) {
+          for (var keyWord in overrides) {
+            for (var langKey in overrides[keyWord])
+              this[keyWord][langKey] = overrides[keyWord][langKey];
+          }
         }
     };
