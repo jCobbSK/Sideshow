@@ -8,8 +8,8 @@ Sideshow.registerWizard({
     estimatedTime: "10 Minutes",
     affects: [
 		function(){
-			//Here we could do any checking to infer if this tutorial is eligible the current screen/context. 
-			//After this checking, just return a boolean indicating if this tutorial will be available. 
+			//Here we could do any checking to infer if this tutorial is eligible the current screen/context.
+			//After this checking, just return a boolean indicating if this tutorial will be available.
 			//As a simple example we're returning a true, so this tutorial would be available in any context
 			return true;
 		}
@@ -36,7 +36,8 @@ Sideshow.registerWizard({
 		    title: "Masking a Subject",
 		    text: "An example could be this text: in this step, this text is the subject. As you can see, we're surrounding it with a dark mask. This make you look at the subject with no doubt where it's located. If you're curious how we make it work: for the moment, you just need to know we're not using `z-index` to pull the subject above the mask. Some tour libraries do this, we see a plenty of drawbacks in this approach. \n\n When writing a tutorial, each subject is represented by a jQuery-like/querySelectorAll-like/CSS-like selector. For this step, for instance, the subject is a `div`, and its selector is `#introducing_sideshow`, but could be any other valid selector returning the same element.\n\nP.S: for now, Sideshow only supports single subjects per step. If you define a subject selector which returns more than one element, Sideshow will throw an exception. Multiple steps will (propably) be available in future versions of Sideshow.",
 		    subject: "#introducing_sideshow",
-		    format: "markdown"
+		    format: "markdown",
+        position: "bottom"
 		},
 		{
 		    title: "You Won't lose your Rounded Corners",
@@ -90,13 +91,13 @@ Sideshow.registerWizard({
 		{
 			title: "Step Completing Conditions",
 		    text: function(){/*
-There are some cases where you just don't want the user to be able to continue the tutorial by clicking in the next button. 
+There are some cases where you just don't want the user to be able to continue the tutorial by clicking in the next button.
 
 *	You want the user to perform some action, or...
 *	You're waiting for a server response, or...
 *	You're expecting your application to be in some specific state before allowing user to continue.
 
-Sideshow provides a way for detecting if your tutorial is ready to proceed to the next step. This feature is called **completing conditions**, you just need to define a function (an evaluator), which will perform some checking and return a boolean. This function is evaluated continuously and shouldn't change the state of your application. When this function return a true value, the user will be allowed to continue. 
+Sideshow provides a way for detecting if your tutorial is ready to proceed to the next step. This feature is called **completing conditions**, you just need to define a function (an evaluator), which will perform some checking and return a boolean. This function is evaluated continuously and shouldn't change the state of your application. When this function return a true value, the user will be allowed to continue.
 			*/},//<<This block-comment-inside-function syntax is a trick to allow some sort of HEREDOC syntax, this can't be used in minified tutorial files, these comments are simply stripped out.
 		    format: "markdown"
 		},
@@ -115,7 +116,7 @@ Sideshow provides a way for detecting if your tutorial is ready to proceed to th
 						    event.dataTransfer.dropEffect = 'copy';
 						    return false;
 						});
-						 
+
 						$('#red_square').on('drop', function (e) {
 						    var event = e.originalEvent;
 						    if (event.stopPropagation) {
@@ -125,12 +126,12 @@ Sideshow provides a way for detecting if your tutorial is ready to proceed to th
 
 						   	//Let's hide the target arrows (in future versions of Sideshow we'll have a more elegant way to do this inside a listener =D)
 						   	$(".sideshow-subject-arrow").fadeOut();
-						    
+
 						    return false;
 						});
 
 		    		});
-		    		
+
 		    	}
 		    },
 		    targets: "#dr_brown, #red_square",
@@ -138,7 +139,7 @@ Sideshow provides a way for detecting if your tutorial is ready to proceed to th
 		    autoContinue: false,
 		    completingConditions: [
 		    	function(){
-		    		return $("#red_square #dr_brown").length > 0; 
+		    		return $("#red_square #dr_brown").length > 0;
 		    	}
 		    ]
 		},
@@ -156,7 +157,7 @@ Sideshow provides a way for detecting if your tutorial is ready to proceed to th
 					    event.dataTransfer.dropEffect = 'copy';
 					    return false;
 					});
-					 
+
 					$('#bttf figure').on('drop', function (e) {
 					    var event = e.originalEvent;
 					    if (event.stopPropagation) {
@@ -166,7 +167,7 @@ Sideshow provides a way for detecting if your tutorial is ready to proceed to th
 
 					   	//Let's hide the target arrows (in future versions of Sideshow we'll have a more elegant way to do this inside a listener =D)
 					   	$(".sideshow-subject-arrow").fadeOut();
-					    
+
 					    return false;
 					});
 		    	},
@@ -179,14 +180,14 @@ Sideshow provides a way for detecting if your tutorial is ready to proceed to th
 		    autoContinue: true,
 		    completingConditions: [
 		    	function(){
-		    		return $("#bttf figure #dr_brown").length > 0; 
+		    		return $("#bttf figure #dr_brown").length > 0;
 		    	}
 		    ]
 		},
 		{
 			title: "Rich Formatting with Markdown",
 			text: function(){/*
-Most of times you we'll need just plain text for your step descriptions, but you may also need to add some kind of formatting. For this purpose, Sideshow accepts Markdown text. You just need to set the `format` step property to `"markdown"`. 
+Most of times you we'll need just plain text for your step descriptions, but you may also need to add some kind of formatting. For this purpose, Sideshow accepts Markdown text. You just need to set the `format` step property to `"markdown"`.
 This way you could use:
 
 *	Unordered lists
@@ -225,7 +226,7 @@ This way you could use:
 			format: "markdown"
 		},
 		{
-			title: "Tutorial Eligibility Conditions", 
+			title: "Tutorial Eligibility Conditions",
 			text: function(){/*
 It's possible to define if a tutorial is eligible for a specific context (a screen, URL, some specific application state, or any other thing which can be tested programmatically). If your tutorials are registered and imported globally, for your whole application, you can create rules for each one (if it will be listed in the Sideshow menu).
 
@@ -243,7 +244,7 @@ affects: [
 	</code>
 </pre>
 
-In the code above, we're making some fictional tutorial available in three differente situations: 
+In the code above, we're making some fictional tutorial available in three differente situations:
 
 *	When the URL hash is "#/messages"
 *	When the route is "/adm/orders". Note we're setting a caseSensitive flag to true (this is useful, for instance, for *nix based web servers), so this tutorial will not be listed in a route "#/ADM/routes".

@@ -535,7 +535,7 @@
      
      @class Wizard
      @@initializer
-     @param {Object} wizardConfig                          The wizard configuration object                        
+     @param {Object} wizardConfig                          The wizard configuration object
      **/
     var Wizard = jazz.Class(function (wizardConfig) {
       this.name = wizardConfig.name;
@@ -732,7 +732,7 @@
         //The details panel (that wraps the step description and arrow) is shown
         DetailsPanel.singleInstance.show();
         //Repositionate the details panel depending on the remaining space in the screen
-        DetailsPanel.singleInstance.positionate();
+        DetailsPanel.singleInstance.positionate(step.position || null);
         //Sets the description properties (text, title and step position)
         var description = StepDescription.singleInstance;
         var text = step.text;
@@ -778,7 +778,7 @@
         }
 
 
-        //If a callback is passed, call it    
+        //If a callback is passed, call it
         if (callback) callback();
         flags.changingStep = false;
       }
@@ -787,7 +787,7 @@
     /**
      Shows the next step of the wizard
      
-     @method next 
+     @method next
      @param {Function} callback                            A callback function to be called
      **/
     Wizard.method("next", function (callback, nextStep) {
@@ -924,6 +924,11 @@
       } else this.play();
     });
 
+    Wizard.method("closedBySS", function () {
+      var listeners = this.listeners;
+      if (listeners && listeners.closeSS) listeners.closeSS();
+    })
+
 
     /**
      The panel that holds step description, is positionated over the biggest remaining space among the four parts of a composite mask
@@ -965,28 +970,49 @@
      
      @method positionate
      **/
-    DetailsPanel.method("positionate", function () {
+    DetailsPanel.method("positionate", function (direction) {
       var parts = Mask.CompositeMask.singleInstance.parts;
 
       //Considering the four parts surrounding the current subject, gets the biggest one
-      var sortedSides = [
+      var sides = [
         [parts.top, "height"],
         [parts.right, "width"],
         [parts.bottom, "height"],
         [parts.left, "width"]
-      ].sort(function (a, b) {
-        return a[0].dimension[a[1]] - b[0].dimension[b[1]];
-      });
+      ];
 
-      var biggestSide = sortedSides.slice(-1)[0];
+      var biggestSide = sides[0]; //default
+      if (direction) {
+        switch (direction) {
+        case 'top':
+          biggestSide = sides[0];
+          break;
+        case 'right':
+          biggestSide = sides[1];
+          break;
+        case 'bottom':
+          biggestSide = sides[2];
+          break;
+        case 'left':
+          biggestSide = sides[3];
+          break;
+        }
+      } else {
+        var sortedSides = sides.sort(function (a, b) {
+          return a[0].dimension[a[1]] - b[0].dimension[b[1]];
+        });
 
-      for (var i = 2; i > 0; i--) {
-        var side = sortedSides[i];
-        var dimension = side[0].dimension;
-        if (dimension.width > 250 && dimension.height > 250) {
-          if ((dimension.width + dimension.height) > ((biggestSide[0].dimension.width + biggestSide[0].dimension.height) * 2)) biggestSide = side;
+        biggestSide = sortedSides.slice(-1)[0];
+
+        for (var i = 2; i > 0; i--) {
+          var side = sortedSides[i];
+          var dimension = side[0].dimension;
+          if (dimension.width > 250 && dimension.height > 250) {
+            if ((dimension.width + dimension.height) > ((biggestSide[0].dimension.width + biggestSide[0].dimension.height) * 2)) biggestSide = side;
+          }
         }
       }
+
 
       if (biggestSide[1] == "width") {
         this.$el.css("left", biggestSide[0].position.x).css("top", 0).css("height", Screen.dimension.height).css("width", biggestSide[0].dimension.width);
@@ -1004,7 +1030,6 @@
         y: parsePxValue(this.$el.css("top"))
       };
     });
-
 
 
     /**
@@ -2303,6 +2328,7 @@
      **/
     SS.close = function () {
       if (!currentWizard) WizardMenu.hide();
+      else currentWizard.closedBySS();
 
       DetailsPanel.singleInstance.fadeOut();
 
@@ -2315,12 +2341,6 @@
         Mask.SubjectMask.singleInstance.fadeOut();
 
       }, longAnimationDuration);
-
-      wizards.forEach(function (w) {
-        if (w.listeners && w.listeners.closeSS) {
-          w.listeners.closeSS();
-        }
-      });
 
       removeDOMGarbage();
       Polling.clear();

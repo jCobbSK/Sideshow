@@ -3,7 +3,7 @@
 
     @class Wizard
     @@initializer
-    @param {Object} wizardConfig                          The wizard configuration object                        
+    @param {Object} wizardConfig                          The wizard configuration object
     **/
     var Wizard = jazz.Class(function(wizardConfig) {
         this.name = wizardConfig.name;
@@ -206,7 +206,7 @@
             //The details panel (that wraps the step description and arrow) is shown
             DetailsPanel.singleInstance.show();
             //Repositionate the details panel depending on the remaining space in the screen
-            DetailsPanel.singleInstance.positionate();
+            DetailsPanel.singleInstance.positionate(step.position || null);
             //Sets the description properties (text, title and step position)
             var description = StepDescription.singleInstance;
             var text = step.text;
@@ -250,9 +250,9 @@
                 //Do a simple fade in for the description box
                 description.fadeIn();
             }
-            
 
-            //If a callback is passed, call it    
+
+            //If a callback is passed, call it
             if (callback) callback();
             flags.changingStep = false;
         }
@@ -261,7 +261,7 @@
     /**
     Shows the next step of the wizard
 
-    @method next 
+    @method next
     @param {Function} callback                            A callback function to be called
     **/
     Wizard.method("next", function(callback, nextStep) {
